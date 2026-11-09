@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /
+# Preview only. Replace after client approval and production SEO acceptance.
