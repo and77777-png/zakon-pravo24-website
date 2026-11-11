@@ -1,0 +1,36 @@
+name: Restricted VPS empty preview
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: zakon-private-preview
+  cancel-in-progress: false
+jobs:
+  preview:
+    if: vars.VPS_PREVIEW_ENABLED == 'true'
+    environment: vps-preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Build public-only immutable fixture
+        run: |
+          python3 infra/package_preview.py --root infra/preview-placeholder/public --source "$GITHUB_SHA" --output preview.tar.gz > receipt.json
+          cat receipt.json
+      - name: Restricted deployment
+        env:
+          DEPLOY_KEY: ${{ secrets.VPS_PREVIEW_DEPLOY_KEY }}
+        run: |
+          set -eu
+          umask 077
+          test -n "$DEPLOY_KEY"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/preview_key
+          trap 'rm -f ~/.ssh/preview_key' EXIT
+          cp infra/vps-known-hosts ~/.ssh/preview_hosts
+          ssh-keygen -lf ~/.ssh/preview_hosts | grep -F 'SHA256:dPyKStqFfUd2QIcXAkQ06LirLlTUIEYTq7rc91K3YNI'
+          archive_sha=$(sha256sum preview.tar.gz | cut -d ' ' -f1)
+          ssh -i ~/.ssh/preview_key -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/preview_hosts -o ConnectTimeout=20 -o HostKeyAlgorithms=rsa-sha2-512,rsa-sha2-256 -o KexAlgorithms=curve25519-sha256 deploy-zakon-preview@168.113.175.111 "deploy $archive_sha $GITHUB_SHA" < preview.tar.gz | tee deployment-receipt.json
