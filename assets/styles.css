@@ -7,6 +7,10 @@
 /* Real client-supplied portrait in the home and practitioner pages */
 .lawyer-photo-real{padding:0;background:#26302e;display:block}
 .lawyer-photo-real:after{border-color:#d1b98980;z-index:2}
-.lawyer-portrait-photo,.about-portrait-photo{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%}
+.lawyer-portrait-photo,.about-portrait-photo{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center center}
 .about-visual-real:before{display:none}
 .about-visual-real .about-portrait-tag{position:absolute;bottom:0;left:0;right:0;padding:40px 24px 26px;color:#fff;font-size:10px;letter-spacing:.17em;z-index:2;background:linear-gradient(transparent,#111e1dcc);text-align:center}
+
+/* Show the full 4:3 client photograph; no portrait crop at any breakpoint. */
+.lawyer-photo-real{height:auto;min-height:0;aspect-ratio:4/3;background:#26302e}
+.about-visual-real{height:auto;min-height:0;aspect-ratio:4/3;background:#26302e}
