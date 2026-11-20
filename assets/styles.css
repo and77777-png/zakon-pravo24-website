@@ -52,3 +52,9 @@
 .practitioner-full-name{font-size:clamp(18px,2.3vw,30px)!important;font-weight:650;line-height:1.35!important;color:#293735!important;letter-spacing:-.025em;margin:13px 0 19px!important;overflow-wrap:break-word}
 .contact-practitioner-name{font-size:clamp(23px,2.8vw,34px);line-height:1.24;letter-spacing:-.045em;color:#293735;font-weight:610;margin:12px 0 28px;overflow-wrap:break-word}
 @media(max-width:680px){.practitioner-full-name{font-size:21px!important}.contact-practitioner-name{font-size:26px}}
+
+
+/* Provider requisites: visible, compact and legible on all pages. */
+.footer-requisites{display:flex;flex-direction:column;gap:3px;margin-top:17px;padding-top:15px;border-top:1px solid rgba(222,209,181,.20);font-size:12px;line-height:1.6;letter-spacing:0;color:#c9cbc5}
+.footer-requisites .footer-requisites-name{font-weight:650;color:#f2e8d6}
+@media(max-width:680px){.footer-requisites{font-size:12px;margin-top:16px;overflow-wrap:anywhere}}
