@@ -14,3 +14,32 @@
 /* Show the full 4:3 client photograph; no portrait crop at any breakpoint. */
 .lawyer-photo-real{height:auto;min-height:0;aspect-ratio:4/3;background:#26302e}
 .about-visual-real{height:auto;min-height:0;aspect-ratio:4/3;background:#26302e}
+
+
+/* Client feedback 2026-11-20: remote consultation and messenger contact links. */
+.messenger-actions{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 25px;max-width:620px}
+.messenger-link{display:inline-flex;align-items:center;justify-content:flex-start;gap:10px;min-height:49px;min-width:180px;padding:9px 15px;border:1px solid #cfb98e7f;background:#ffffff14;color:inherit;text-decoration:none;border-radius:8px;font-size:13px;font-weight:670;letter-spacing:-.01em;transition:transform .22s ease,background .22s ease,border-color .22s ease}
+.messenger-link:hover,.messenger-link:focus-visible{transform:translateY(-2px);background:#ffffff24;border-color:#dbbd83}
+.messenger-link .messenger-icon{display:grid;place-items:center;width:29px;height:29px;flex-shrink:0;border-radius:9px;background:#36a5d5;color:white;font-size:16px;font-weight:800}
+.messenger-link.messenger-max .messenger-icon{background:#6356e8;font-size:15px}
+.messenger-link .messenger-go{opacity:.7;margin-left:auto;font-size:15px}
+.contacts-page .messenger-link{background:#ffffff;color:#232f31;border-color:#dcd4c4}
+.contacts-page .messenger-link:hover{background:#f2eee6}
+.footer .footer-social{color:#dbc59f;font-size:12px}
+.footer .footer-social:hover{color:#fff}
+.hero-remote-note{display:inline-flex;align-items:center;gap:9px;margin:25px 0 0;padding:10px 14px;border:1px solid #b6a27c66;border-radius:5px;color:#ead7b6;font-size:12px;line-height:1.5}
+.hero-remote-note:before{content:'●';font-size:9px;color:#cbb082}
+.expertise-primary-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0 28px}
+.expertise-feature{height:100%;display:grid;grid-template-columns:32px 1fr 30px;align-items:start;gap:14px;background:#fffdf9;border:1px solid #d8d0bf;border-radius:9px;padding:28px 23px;box-shadow:0 12px 40px #2a352010}
+.expertise-feature:hover{background:#f7f0e2;padding-left:23px;transform:translateY(-4px)}
+.expertise-feature h3{font-size:clamp(20px,2.5vw,30px);line-height:1.16}
+.expertise-feature p{font-size:12px;line-height:1.85}
+.expertise-more{border-top:1px solid #d9d1c3;padding-top:10px}
+.expertise-more summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:18px;color:#34413f;font-size:16px;font-weight:660;padding:18px 14px;list-style:none;outline-offset:5px}
+.expertise-more summary::-webkit-details-marker{display:none}
+.expertise-more summary span{color:#a5865b;font-size:22px;transition:transform .2s}
+.expertise-more[open] summary span{transform:rotate(45deg)}
+.expertise-more .directory-list{margin-top:8px}
+@media(max-width:960px){.expertise-primary-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.messenger-actions{gap:8px}.messenger-link{flex:1 1 calc(50% - 6px);min-width:0;min-height:48px;padding:9px 10px;font-size:12px}.messenger-link .messenger-icon{width:25px;height:25px;font-size:14px}.expertise-feature{grid-template-columns:20px 1fr 22px;gap:10px;padding:22px 14px}.expertise-feature:hover{padding-left:14px}.expertise-feature h3{font-size:23px}.hero-remote-note{font-size:11px}}
+@media(max-width:360px){.messenger-link{flex:1 1 100%}}
