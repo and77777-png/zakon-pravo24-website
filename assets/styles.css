@@ -74,3 +74,15 @@
 .contact-info-panel .form-tag{margin-bottom:12px}
 @media(max-width:680px){.contact-action-link{font-size:13px;padding:11px 12px;gap:10px;min-height:56px}.contact-action-icon{width:34px;height:34px;border-radius:9px;font-size:17px}.contact-action-lead{font-size:13px}.contact-action-note{font-size:11px}}
 @media(max-width:360px){.contact-action-link{font-size:12px}}
+
+/* Personal-data policy: readable document layout for mobile and desktop. */
+.policy-revision{margin-top:19px;font-size:12px;color:#ad9471;letter-spacing:.05em}
+.legal-copy .policy-summary{background:#eee7da;border-left:3px solid #b49265;padding:21px 25px;color:#34413f;line-height:1.8;font-size:13px;margin:0 0 33px}
+.legal-copy .policy-summary strong{display:block;font-size:15px;color:#2e3835;margin-bottom:6px}
+.legal-copy h2{font-size:clamp(22px,2.5vw,30px);line-height:1.3;letter-spacing:-.035em;margin:43px 0 17px;color:#243131}
+.legal-copy ul{padding-left:23px;margin:12px 0 20px;color:#64716e;font-size:14px;line-height:1.85}
+.legal-copy li{padding-left:5px;margin:8px 0}
+.legal-copy p strong,.legal-copy li strong{color:#34413f;font-weight:700}
+.legal-copy p a:not(.inline-link){color:#86623a;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.policy-endnote{border-top:1px solid #dcd7cb;margin-top:37px;padding-top:18px;color:#68716c;font-size:12px;line-height:1.8}
+@media(max-width:680px){.legal-copy h2{margin-top:35px;font-size:23px}.legal-copy p,.legal-copy ul{font-size:13px!important;line-height:1.85}.legal-copy .policy-summary{padding:16px 18px;font-size:12px}}
