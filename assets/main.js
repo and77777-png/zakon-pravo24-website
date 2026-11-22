@@ -34,18 +34,4 @@
     // Keep first-fold content visible if JS observers fail to run quickly.
     setTimeout(() => document.querySelectorAll('.hero [data-reveal]').forEach(el => el.classList.add('is-visible')), 500);
   }
-  document.querySelectorAll('.request-form').forEach(form => {
-    form.addEventListener('submit', e => {
-      e.preventDefault(); // Never transmit or persist data from this demo.
-      if (!form.reportValidity()) return;
-      form.querySelector('.form-response')?.remove();
-      const result = document.createElement('div');
-      result.className = 'form-response';
-      result.setAttribute('role', 'status');
-      result.textContent = 'Это демонстрационная форма. Поля заполнены корректно, но заявка не отправлена. Для связи используйте телефон или электронную почту.';
-      form.append(result);
-      form.reset();
-    });
-    form.querySelectorAll('[type="submit"]').forEach(button => { button.disabled = false; });
-  });
 })();

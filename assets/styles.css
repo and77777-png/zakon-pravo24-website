@@ -58,3 +58,19 @@
 .footer-requisites{display:flex;flex-direction:column;gap:3px;margin-top:17px;padding-top:15px;border-top:1px solid rgba(222,209,181,.20);font-size:12px;line-height:1.6;letter-spacing:0;color:#c9cbc5}
 .footer-requisites .footer-requisites-name{font-weight:650;color:#f2e8d6}
 @media(max-width:680px){.footer-requisites{font-size:12px;margin-top:16px;overflow-wrap:anywhere}}
+
+
+/* Direct-contact conversion panel — no browser forms and no false submission feedback. */
+.contact-action-panel h3{margin:15px 0 14px}
+.contact-action-lead{font-size:14px;line-height:1.75;color:#525e5c;margin:0 0 24px}
+.contact-action-links{display:flex;flex-direction:column;gap:11px}
+.contact-action-link{display:flex;align-items:center;gap:13px;min-height:60px;padding:12px 16px;background:#fffdf9;border:1px solid #d7d0c3;border-radius:6px;font-size:14px;font-weight:680;color:#243031;line-height:1.35;white-space:normal;transition:transform .2s,border-color .2s,background .2s}
+.contact-action-link:hover,.contact-action-link:focus-visible{transform:translateY(-2px);border-color:#b89a72;background:#f4ecdf}
+.contact-action-link>:last-child{margin-left:auto;font-size:16px;color:#8e775a;flex:none}
+.contact-action-icon{width:38px;height:38px;flex:none;display:grid;place-items:center;border-radius:11px;font-size:19px;font-weight:780;color:#fff;background:#278fc3}
+.contact-action-max .contact-action-icon{background:#6253ce}
+.contact-action-call .contact-action-icon{background:#485a54}
+.contact-action-note{font-size:11px;line-height:1.65;color:#66726c;margin:19px 0 0}
+.contact-info-panel .form-tag{margin-bottom:12px}
+@media(max-width:680px){.contact-action-link{font-size:13px;padding:11px 12px;gap:10px;min-height:56px}.contact-action-icon{width:34px;height:34px;border-radius:9px;font-size:17px}.contact-action-lead{font-size:13px}.contact-action-note{font-size:11px}}
+@media(max-width:360px){.contact-action-link{font-size:12px}}
