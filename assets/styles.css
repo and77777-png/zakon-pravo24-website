@@ -86,3 +86,14 @@
 .legal-copy p a:not(.inline-link){color:#86623a;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
 .policy-endnote{border-top:1px solid #dcd7cb;margin-top:37px;padding-top:18px;color:#68716c;font-size:12px;line-height:1.8}
 @media(max-width:680px){.legal-copy h2{margin-top:35px;font-size:23px}.legal-copy p,.legal-copy ul{font-size:13px!important;line-height:1.85}.legal-copy .policy-summary{padding:16px 18px;font-size:12px}}
+
+/* Primary mobile number and secondary landline. */
+.header-phone{font-weight:750}
+.contact-big[href="tel:+79333385567"]{font-weight:700}
+.contact-secondary[href="tel:+73912144900"]{font-size:18px;font-weight:400;color:#65706c;margin-top:5px}
+.contact-line .contact-phone-primary{font-size:20px;font-weight:700;color:#fff}
+.contact-line .contact-phone-secondary{font-size:15px;font-weight:400;color:#bdc7c2}
+.mobile-menu>a.mobile-phone-primary{font-size:19px;font-weight:750;color:#80613c}
+.mobile-menu>a.mobile-phone-secondary{font-size:15px;font-weight:400;color:#59615d}
+.footer-col .footer-strong[href="tel:+79333385567"]{font-weight:700}
+.footer-col .footer-secondary-phone{font-size:12px;font-weight:400}
