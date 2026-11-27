@@ -2,6 +2,6 @@
 Require local
 Options -Indexes
 RewriteEngine On
-RewriteRule ^(?:admin/core\.php|tests/|\.git) - [F,L]
-RewriteRule ^(?:assets/|admin/|media\.php$|robots\.txt$|site\.php$) - [L]
+RewriteRule ^(?:admin/core\.php|tests/|ops/|\.git) - [F,L]
+RewriteRule ^(?:assets/|admin/|media\.php$|site\.php$) - [L]
 RewriteRule ^ site.php [L]

@@ -105,7 +105,7 @@ with tempfile.TemporaryDirectory(prefix="zakon-acceptance-") as directory:
 
         title = re.search(rb'name="values\[(text-0-[0-9a-f]+)\]"', page)[1].decode()
         assert action("save", {f"values[{title}]": "Acceptance & draft <example>"})[0] == 200
-        assert b"<title>Acceptance &amp; draft &lt;example&gt;</title>" in request("/admin/?preview=1")[1]
+        assert re.search(rb"<title[^>]*>Acceptance &amp; draft &lt;example&gt;</title>", request("/admin/?preview=1")[1])
         assert b"Acceptance" not in request("/")[1]
         assert action("publish")[0] == 200
         assert b"Acceptance" in request("/")[1]
@@ -135,6 +135,42 @@ with tempfile.TemporaryDirectory(prefix="zakon-acceptance-") as directory:
         assert action("save", {f"values[{title}]": "Acceptance", f"values[{image}]": path})[0] == 200
         assert action("publish")[0] == 200 and request(path)[2]["Content-Type"] == "image/webp"
         assert action("logout")[0] == 200 and request(path + "&preview=1")[0] == 404
+        page = request("/admin/")[1]
+        assert request("/admin/", {"action": "login", "csrf": input_value(page, "csrf"), "password": password})[0] == 200
+        assert action("contacts", {"mobile": "+7 (999) 000-00-01", "landline": "+7 (391) 000-00-02",
+                                   "telegram": "https://t.me/Acceptance_Test", "max": "https://max.ru/u/AcceptanceTest"})[0] == 200
+        assert b"tel:+79990000001" not in request("/")[1]
+        assert action("publish")[0] == 200
+        for route in routes:
+            html = request(route)[1]
+            assert b"tel:+79990000001" in html and b"+7 (999) 000-00-01" in html, route
+            assert b"tel:+79333385567" not in html and b"https://t.me/Tati_Urist" not in html, route
+        assert "bytes" not in Path(directory, "state.json").read_text(encoding="utf-8")
+        assert Path(directory, "media-" + media + ".webp").exists()
+        assert action("delete_media", {"media_id": media})[0] == 422
+        assert action("service", {"slug": "acceptance-service", "title": "Проверка услуги",
+                                  "description": "Только синтетические данные", "order": 1})[0] == 200
+        assert action("service", {"slug": "bankrotstvo", "title": "Банкротство", "description": "",
+                                  "order": 2, "hidden": "on"})[0] == 200
+        assert request("/acceptance-service/")[0] == 404 and request("/bankrotstvo/")[0] == 200
+        assert action("publish")[0] == 200
+        assert "Только синтетические данные" in request("/acceptance-service/")[1].decode("utf-8")
+        assert request("/bankrotstvo/")[0] == 404
+        catalog = request("/uslugi/")[1]
+        assert b'href="/acceptance-service/"' in catalog and b'../bankrotstvo/' not in catalog
+        assert catalog.index(b'href="/acceptance-service/"') < catalog.index(b'directory-item" href="../ekspertiza/')
+        sitemap = request("/sitemap.xml")[1]
+        assert b'/acceptance-service/' in sitemap and b'/bankrotstvo/' not in sitemap
+        assert request("/stroitelnaya_ekspertiza")[0] == 200  # urllib follows the 301
+        assert list(Path(directory).glob('release-*/*.html'))
+        new_password = os.urandom(22).hex()
+        assert action("password", {"current_password": password, "new_password": new_password,
+                                   "repeat_password": new_password})[0] == 200
+        page = request("/admin/")[1]
+        assert b'name="version"' not in page
+        assert request("/admin/", {"action": "login", "csrf": input_value(page, "csrf"), "password": password})[0] == 422
+        assert request("/admin/", {"action": "login", "csrf": input_value(page, "csrf"), "password": new_password})[0] == 200
+        print("PASS: centralized contacts, external media files, referenced-image guard, password rotation")
         print("PASS: 17 pages, robots, sitemap, 404, authentication, CSRF, draft, publish, backup, rollback, restore, optimistic lock, media, logout")
     finally:
         process.terminate()
