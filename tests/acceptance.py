@@ -1,3 +1,4 @@
+import html as html_entities
 import http.cookiejar
 import os
 from pathlib import Path
@@ -154,7 +155,7 @@ with tempfile.TemporaryDirectory(prefix="zakon-acceptance-") as directory:
                                   "order": 2, "hidden": "on"})[0] == 200
         assert request("/acceptance-service/")[0] == 404 and request("/bankrotstvo/")[0] == 200
         assert action("publish")[0] == 200
-        assert "Только синтетические данные" in request("/acceptance-service/")[1].decode("utf-8")
+        assert "Только синтетические данные" in html_entities.unescape(request("/acceptance-service/")[1].decode("utf-8"))
         assert request("/bankrotstvo/")[0] == 404
         catalog = request("/uslugi/")[1]
         assert b'href="/acceptance-service/"' in catalog and b'../bankrotstvo/' not in catalog
