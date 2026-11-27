@@ -1,0 +1,7 @@
+# Candidate only. Replace this block with verified HTTP Basic authentication on the closed staging host.
+Require local
+Options -Indexes
+RewriteEngine On
+RewriteRule ^(?:admin/core\.php|tests/|\.git) - [F,L]
+RewriteRule ^(?:assets/|admin/|media\.php$|robots\.txt$|site\.php$) - [L]
+RewriteRule ^ site.php [L]
