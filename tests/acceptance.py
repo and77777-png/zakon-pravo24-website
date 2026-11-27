@@ -65,6 +65,31 @@ with tempfile.TemporaryDirectory(prefix="zakon-acceptance-") as directory:
         def input_value(html, name):
             return re.search(rb'name="' + name.encode() + rb'" value="([^"]+)"', html)[1].decode()
 
+        if len(sys.argv) > 2:
+            from playwright.sync_api import sync_playwright
+            with sync_playwright() as playwright:
+                browser = playwright.chromium.launch(executable_path=sys.argv[2])
+                for width in (320, 390, 768, 1440):
+                    view = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="reduce")
+                    errors = []
+                    view.on("pageerror", lambda error: errors.append(str(error)))
+                    for route in ("/", "/uslugi/", "/privacy/"):
+                        url = base + route
+                        original = root / route.strip("/") / "index.html"
+                        view.route(url, lambda flow: flow.fulfill(
+                            body=original.read_bytes(), content_type="text/html; charset=UTF-8"),
+                            times=1)
+                        view.goto(url, wait_until="networkidle")
+                        before = view.screenshot(animations="disabled")
+                        view.goto(url, wait_until="networkidle")
+                        assert view.screenshot(animations="disabled") == before, (route, width)
+                    view.goto(base + "/admin/", wait_until="networkidle")
+                    assert view.locator("input[type=password]").is_visible()
+                    assert view.evaluate("document.documentElement.scrollWidth === innerWidth")
+                    assert not errors, errors
+                    view.close()
+                browser.close()
+            print("PASS: 12 pixel comparisons, admin login responsive, no page errors")
         login = request("/admin/")[1]
         assert request("/admin/?preview=1")[1] == login
         status, page, _ = request("/admin/", {
