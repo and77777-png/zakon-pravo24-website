@@ -70,7 +70,7 @@ with tempfile.TemporaryDirectory(prefix="zakon-acceptance-") as directory:
             from playwright.sync_api import sync_playwright
             with sync_playwright() as playwright:
                 browser = playwright.chromium.launch(executable_path=sys.argv[2])
-                for width in (320, 390, 768, 1440):
+                for width in (320, 390, 768, 1024, 1440):
                     view = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="reduce")
                     errors = []
                     view.on("pageerror", lambda error: errors.append(str(error)))
@@ -87,10 +87,21 @@ with tempfile.TemporaryDirectory(prefix="zakon-acceptance-") as directory:
                     view.goto(base + "/admin/", wait_until="networkidle")
                     assert view.locator("input[type=password]").is_visible()
                     assert view.evaluate("document.documentElement.scrollWidth === innerWidth")
+                    view.locator("input[name=password]").fill(password)
+                    view.get_by_role("button", name="Войти", exact=True).click()
+                    for anchor in ("pages", "services", "editor", "contacts", "photos", "history", "backup", "help"):
+                        view.locator(f'nav a[href="#{anchor}"]').click()
+                        section = view.locator(f"#{anchor}")
+                        assert section.is_visible(), (width, anchor)
+                        assert view.evaluate("document.documentElement.scrollWidth === innerWidth"), (width, anchor)
+                    view.locator("#services summary").first.click()
+                    assert view.locator("#services input[name=title]").first.is_visible()
+                    view.get_by_role("button", name="Выйти", exact=True).click()
+                    assert view.locator("input[name=password]").is_visible()
                     assert not errors, errors
                     view.close()
                 browser.close()
-            print("PASS: 12 pixel comparisons, admin login responsive, no page errors")
+            print("PASS: 15 pixel comparisons, 8 admin sections at 5 widths, no page errors")
         login = request("/admin/")[1]
         assert request("/admin/?preview=1")[1] == login
         status, page, _ = request("/admin/", {
@@ -190,6 +201,15 @@ with tempfile.TemporaryDirectory(prefix="zakon-acceptance-") as directory:
         assert request("/acceptance-service/")[1] == live
         assert request("/sitemap")[1] == request("/sitemap.xml")[1]
         assert request("/privacy/index.html")[1] == request("/privacy/")[1]
+        expired_blob = Path(directory, "media-" + "f" * 64 + ".webp")
+        expired_blob.write_bytes(b"unused")
+        expired = time.time() - 8 * 86400
+        os.utime(expired_blob, (expired, expired))
+        outputs = subprocess.check_output([php, "ops/maintenance.php"], cwd=root, env=env)
+        assert expired_blob.exists() and expired_blob.name.encode() in outputs
+        subprocess.run([php, "ops/maintenance.php", "--quarantine"], cwd=root, env=env, check=True)
+        assert not expired_blob.exists() and (Path(directory, "quarantine") / expired_blob.name).exists()
+        assert request(path)[0] == 200
         print("PASS: simulated low disk leaves state and published HTML intact")
         print("PASS: centralized contacts, external media files, referenced-image guard, password rotation")
         print("PASS: 17 pages, robots, sitemap, 404, authentication, CSRF, draft, publish, backup, rollback, restore, optimistic lock, media, logout")
