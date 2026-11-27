@@ -49,6 +49,10 @@ $redirects = [
     '/nezavisimaya_ekspertiza_krasnoyarsk' => '/ekspertiza/',
 ];
 $target = $redirects[rtrim($path, '/')] ?? null;
+if ($path === '/sitemap' || $path === '/sitemap/') {
+    header('Location: /sitemap.xml', true, 301);
+    exit;
+}
 if ($target && isset($pages[trim($target, '/')])) {
     header('Location: ' . $target, true, 301);
     exit;
@@ -56,6 +60,11 @@ if ($target && isset($pages[trim($target, '/')])) {
 if (!array_key_exists($page, $pages)) {
     http_response_code(404);
     exit('Страница не найдена.');
+}
+$canonicalPath = $page === '' ? '/' : '/' . $page . '/';
+if ($path !== $canonicalPath || ($production && ($_SERVER['HTTP_HOST'] ?? '') === 'www.zakon-pravo24.ru')) {
+    header('Location: ' . ($production ? ORIGIN : '') . $canonicalPath, true, 301);
+    exit;
 }
 try {
     header('Content-Type: text/html; charset=UTF-8');

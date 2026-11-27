@@ -326,9 +326,9 @@ function renderPage(string $page, array $content, bool $preview = false, array $
     return contactReplacement($document->saveHTML(), $contacts);
 }
 
-function releasePages(string $directory, array $content, array $contacts, array $services): string {
+function releasePages(string $directory, array $content, array $contacts, array $services, int $minimumFreeBytes = 33554432): string {
     $free = disk_free_space($directory);
-    if ($free === false || $free < 32 * 1024 * 1024) {
+    if ($free === false || $free < $minimumFreeBytes) {
         throw new RuntimeException('Недостаточно свободного места для безопасной публикации.');
     }
     $id = bin2hex(random_bytes(16));

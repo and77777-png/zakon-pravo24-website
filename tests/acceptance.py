@@ -28,7 +28,7 @@ with tempfile.TemporaryDirectory(prefix="zakon-acceptance-") as directory:
     with socket.socket() as probe:
         probe.bind(("127.0.0.1", 0))
         port = probe.getsockname()[1]
-    args = [php]
+    args = [php, "-d", "opcache.enable_cli=0"]
     if os.name == "nt":
         args += ["-d", "extension_dir=" + str(Path(php).parent / "ext"), "-d", "extension=gd"]
     args += ["-S", f"127.0.0.1:{port}", "tests/router.php"]
@@ -171,6 +171,26 @@ with tempfile.TemporaryDirectory(prefix="zakon-acceptance-") as directory:
         assert b'name="version"' not in page
         assert request("/admin/", {"action": "login", "csrf": input_value(page, "csrf"), "password": password})[0] == 422
         assert request("/admin/", {"action": "login", "csrf": input_value(page, "csrf"), "password": new_password})[0] == 200
+        committed = Path(directory, "state.json").read_bytes()
+        live = request("/acceptance-service/")[1]
+        probe = """
+        require 'admin/core.php';
+        [$directory] = openStore();
+        try {
+            state($directory, static function (array &$data) use ($directory): void {
+                $data['release'] = releasePages($directory, [], [], [], PHP_INT_MAX);
+            });
+            exit(1);
+        } catch (RuntimeException $error) {
+            exit(0);
+        }
+        """
+        subprocess.run([php, "-r", probe], cwd=root, env=env, check=True)
+        assert Path(directory, "state.json").read_bytes() == committed
+        assert request("/acceptance-service/")[1] == live
+        assert request("/sitemap")[1] == request("/sitemap.xml")[1]
+        assert request("/privacy/index.html")[1] == request("/privacy/")[1]
+        print("PASS: simulated low disk leaves state and published HTML intact")
         print("PASS: centralized contacts, external media files, referenced-image guard, password rotation")
         print("PASS: 17 pages, robots, sitemap, 404, authentication, CSRF, draft, publish, backup, rollback, restore, optimistic lock, media, logout")
     finally:

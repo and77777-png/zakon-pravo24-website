@@ -218,7 +218,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     throw new InvalidArgumentException('Действие недоступно.');
                 }
                 if (in_array($action, ['publish', 'rollback', 'restore'], true)) {
-                    $data['release'] = releasePages($directory, $data['live'], $data['live_contacts'] ?? [], $data['live_services'] ?? []);
+                    $data['release'] = releasePages(
+                        $directory, $data['live'], $data['live_contacts'] ?? [],
+                        $data['live_services'] ?? [], 33554432
+                    );
                 }
                 $data['version']++;
             });
