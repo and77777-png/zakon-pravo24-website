@@ -100,7 +100,10 @@ function renderPage(string $page, array $content, bool $preview = false): string
             }
             $node->ownerElement->setAttribute($node->name, $value);
         } elseif ($node->nodeType === XML_ELEMENT_NODE) {
-            $node->replaceChildren($document->createTextNode($value));
+            while ($node->firstChild !== null) {
+                $node->removeChild($node->firstChild);
+            }
+            $node->appendChild($document->createTextNode($value));
         } else {
             $node->nodeValue = $value;
         }

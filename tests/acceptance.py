@@ -27,8 +27,10 @@ with tempfile.TemporaryDirectory(prefix="zakon-acceptance-") as directory:
     with socket.socket() as probe:
         probe.bind(("127.0.0.1", 0))
         port = probe.getsockname()[1]
-    args = [php, "-d", "extension_dir=" + str(Path(php).parent / "ext"),
-            "-d", "extension=gd", "-S", f"127.0.0.1:{port}", "tests/router.php"]
+    args = [php]
+    if os.name == "nt":
+        args += ["-d", "extension_dir=" + str(Path(php).parent / "ext"), "-d", "extension=gd"]
+    args += ["-S", f"127.0.0.1:{port}", "tests/router.php"]
     process = subprocess.Popen(args, cwd=root, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     client = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
     base = f"http://127.0.0.1:{port}"
