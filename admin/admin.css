@@ -1,0 +1,17 @@
+* { box-sizing: border-box; }
+:root { font: 16px/1.55 system-ui, sans-serif; color: #202934; background: #edf0f3; }
+body { margin: 0; }
+main { width: min(100% - 28px, 68rem); margin: 2rem auto; }
+header, section { background: white; border: 1px solid #dbe2e8; border-radius: 14px; padding: clamp(1rem, 3vw, 2rem); margin-bottom: 1rem; }
+header { color: white; background: #1d2935; }
+header h1, header p, section h2 { margin: 0 0 .45em; }
+nav, .pages { display: flex; flex-wrap: wrap; gap: .7rem 1.1rem; }
+nav { margin: 1.4rem 0; }
+.pages { padding-left: 1.25rem; }
+a { color: #164975; }
+a[aria-current] { font-weight: 700; }
+label { display: block; margin: .9rem 0; font-weight: 600; }
+textarea, input:not([type=hidden]), select { display: block; min-width: 0; width: 100%; padding: .65rem; margin-top: .4rem; border: 1px solid #8496a6; border-radius: 6px; font: inherit; }
+button { background: #174b71; color: #fff; border: 0; border-radius: 6px; padding: .65rem 1rem; cursor: pointer; font: inherit; margin: .35rem .35rem .35rem 0; }
+:focus-visible { outline: 3px solid #ba6700; outline-offset: 3px; }
+.error { background: #fce6e6; padding: .8rem; }
